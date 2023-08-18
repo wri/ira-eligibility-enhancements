@@ -196,7 +196,7 @@
         type="text/css">
     <div id="main-container">
         <nav>
-            <div class="title">IRA Eligibility Enhancements</div>
+            <div class="title">IRA Eligibility Enhancements (beta)</div>
             <div class="nav-links">
                 <span class="clickable nav-link" data-modal="info"
                     onclick="getModal(this.getAttribute('data-modal'))">More information on the enhancements represented
@@ -230,9 +230,9 @@
                     <ul>
                         <li><span class="clickable" data-modal="info"
                                 onclick="getModal(this.getAttribute('data-modal'))">Justice 40</span></li>
-                        <li><span class="clickable" data-modal="info"
+                        <!--<li><span class="clickable" data-modal="info"
                                 onclick="getModal(this.getAttribute('data-modal'))">Alternative Fuel Infrastructure Tax
-                                Credit</span>*</li>
+                                Credit</span>*</li>-->
                         <li>ITC and PTC enhancements for: </li>
                         <ul>
                             <li><span class="clickable" data-modal="info"
@@ -242,10 +242,10 @@
                                     Credit Program</span>‡</li>
                         </ul>
                     </ul>
-                    <p class="note">
+                    <!--<p class="note">
                         * Note that residential charging or fueling equipment installed anywhere in the country
                         qualifies for a
-                        version of this credit </p>
+                        version of this credit </p>-->
                     <p class="note">
                         †Note that brownfields, one of the three types of locations eligible for this bonus, are not
                         shown on
@@ -271,7 +271,7 @@
             <div id="map"></div>
             <div id="state-legend" class="legend">
                 <div><span style="background-color: #F0AB0084"></span>Justice 40</div>
-                <div><span style="background-color: #EB802676"></span>Alternative Fuel Infrastructure Tax Credit</div>
+                <!--<div><span style="background-color: #EB802676"></span>Alternative Fuel Infrastructure Tax Credit</div>-->
                 <div><span style="background-color: #EE316176"></span>Low-Income Communities Bonus Credit</div>
                 <div><span style="background-color: #3855A384"></span>Energy Communities: MSA/Non-MSA FFE</div>
                 <div><span style="background-color: #00000059"></span>Energy Communities: Coal Closure</div>
@@ -292,7 +292,7 @@
         const geocoder = new MapboxGeocoder({
             accessToken: mapboxgl.accessToken,
             countries: 'US,UM,VI,PR,GU,AS,MP',
-            types: 'address,neighborhood,locality,poi,district',
+            types: 'address,neighborhood,locality,place,poi,district',
             marker: false,
             mapboxgl: mapboxgl,
             flyTo: {
@@ -324,20 +324,20 @@
                 },
                 basemapLayerDataIndex
             );
-            map.addLayer(
-                {
-                    'id': 'af_qualifiers_fill',
-                    'type': 'fill',
-                    'source': 'ira_tiles',
-                    'source-layer': 'af_qualifiers',
-                    "paint": {
-                        "fill-color": "#EB8026", //9B216C //
-                        "fill-opacity": 0.30 // hexa 59
-                    },
-                    "layout": { "visibility": "visible" }
-                },
-                basemapLayerDataIndex
-            );
+            // map.addLayer(
+            //     {
+            //         'id': 'af_qualifiers_fill',
+            //         'type': 'fill',
+            //         'source': 'ira_tiles',
+            //         'source-layer': 'af_qualifiers',
+            //         "paint": {
+            //             "fill-color": "#EB8026", //9B216C //
+            //             "fill-opacity": 0.30 // hexa 59
+            //         },
+            //         "layout": { "visibility": "visible" }
+            //     },
+            //     basemapLayerDataIndex
+            // );
             map.addLayer(
                 {
                     'id': 'low_income_fill',
@@ -511,7 +511,6 @@
             return `<br><span class="clickable" data-modal="ec" onclick="getModal(this.getAttribute('data-modal'))">Energy Community</span>: ${(ecQual == 1 || adjCoal == "Yes" || genClose == "Yes" || mineClose == "Yes") ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}
                         <br><span class="clickable" data-modal="licb" onclick="getModal(this.getAttribute('data-modal'))">Low Income Communities Bonus Credit Program</span>: ${lowIncome == "true" ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}
                         <br><span class="clickable" data-modal="justice40" onclick="getModal(this.getAttribute('data-modal'))">Justice 40</span>: ${justice40 == 1 ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}
-                        <br><span class="clickable" data-modal="afitc" onclick="getModal(this.getAttribute('data-modal'))">Alternative Fuel Infrastructure Tax Credit</span>: ${afitc == "true" ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}
                         `;
         }
         function zoomGetter() {
@@ -553,11 +552,11 @@
         function enableInteraction() {
             map.scrollZoom.enable()
             map.boxZoom.enable()
-            map.dragRotate.enable()
+            //map.dragRotate.enable()
             map.dragPan.enable()
             map.keyboard.enable()
             map.doubleClickZoom.enable()
-            map.touchZoomRotate.enable()
+            //map.touchZoomRotate.enable()
         }
 
         map.on('moveend', function () {
@@ -567,6 +566,9 @@
             enableInteraction()
         })
 
+        map.dragRotate.disable();
+        map.touchZoomRotate.disableRotation();
+        map.touchPitch.disable();
         map.doubleClickZoom.disable();
 
         var infoModal = document.getElementById("myModal");
@@ -606,16 +608,6 @@
                         water, workforce training and development, and energy efficiency. The full list of covered programs will
                         be updated regularly and can be found <a
                             href="https://www.whitehouse.gov/wp-content/uploads/2023/04/Justice40-Covered-Programs-List_v1.4_04-20-2023.pdf">here</a>.
-                    </p>
-                    <h3>Alternative Fuel Infrastructure Tax Credit</h3>
-                    <p>
-                        The <a href="https://afdc.energy.gov/laws/10513">Alternative Fuel Infrastructure Tax Credit</a> focuses
-                        on ensuring vehicle charging and fueling access in non-urban and low-income areas. It offers tax credits
-                        that businesses, governments, non-profits, individuals, and more can use to install EV charging
-                        infrastructure or fueling equipment for natural gas, propane, hydrogen, E85, or diesel fuel blends
-                        containing a minimum of 20% biodiesel in their residence or on commercial property. Residential charging
-                        or fueling equipment installed anywhere in the country is also eligible for a version of this tax
-                        credit.
                     </p>
                     <h3>ITC and PTC </h3>
                     <p>
