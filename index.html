@@ -494,7 +494,7 @@
         }
 
         function queryToTextBlock() {
-            globalThis.feats = map.queryRenderedFeatures(point, { layers: ['cejst_fill', 'low_income_fill', 'ccec_fill', 'ffe_ec_fill', 'af_qualifiers_fill'] });
+            globalThis.feats = map.queryRenderedFeatures(point, { layers: ['cejst_fill', 'low_income_fill', 'ccec_fill', 'ffe_ec_fill'] });
             globalThis.newFeats = feats.map(d => ({
                 layer: d.sourceLayer, properties: d.properties
             }))
@@ -506,7 +506,6 @@
             var mineClose = newFeats.filter(i => i.layer == "ccec")[0]?.properties.mine_closu
             var lowIncome = newFeats.filter(i => i.layer == "low_income")[0]?.properties.low_inc_qual
             var justice40 = newFeats.filter(i => i.layer == "cejst")[0]?.properties.AJDLI_ET
-            var afitc = newFeats.filter(i => i.layer == "af_qualifiers")[0]?.properties.afitc_qual
 
             return `<br><span class="clickable" data-modal="ec" onclick="getModal(this.getAttribute('data-modal'))">Energy Community</span>: ${(ecQual == 1 || adjCoal == "Yes" || genClose == "Yes" || mineClose == "Yes") ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}
                         <br><span class="clickable" data-modal="licb" onclick="getModal(this.getAttribute('data-modal'))">Low Income Communities Bonus Credit Program</span>: ${lowIncome == "true" ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}
