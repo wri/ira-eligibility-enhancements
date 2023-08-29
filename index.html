@@ -90,21 +90,6 @@
             color: #222222
         }
 
-        @media only screen and (max-width: 800px) {
-            #content-container {
-                flex-direction: column-reverse;
-            }
-
-            #map {
-                height: 60%;
-                flex-shrink: 0;
-            }
-
-            #sidebar {
-                width: 100%;
-            }
-        }
-
         #geocoder-container>div {
             left: 10%;
             min-width: 50%;
@@ -178,12 +163,46 @@
             margin: 0 0 10px;
         }
 
+        .legend div {
+            padding:0 0.4rem;
+        }
+
+        .legend div:hover, .legend div:active {
+            color:#222222;
+            background-color: #eeeeee;
+            cursor: pointer;
+        }
+
         .legend div span {
             border-radius: 50%;
             display: inline-block;
             height: 10px;
             margin-right: 5px;
             width: 10px;
+        }
+        .mute_style {
+            opacity:0.4;
+        }
+
+        @media only screen and (max-width: 800px) {
+            #content-container {
+                flex-direction: column-reverse;
+            }
+
+            #map {
+                height: 60%;
+                flex-shrink: 0;
+            }
+
+            #sidebar {
+                width: 100%;
+            }
+            .legend {
+                position: sticky;
+                justify-content: center;
+                align-items: center;
+                columns: 2 auto;
+            }
         }
     </style>
 </head>
@@ -270,11 +289,11 @@
             </div>
             <div id="map"></div>
             <div id="state-legend" class="legend">
-                <div><span style="background-color: #F0AB0084"></span>Justice 40</div>
-                <!--<div><span style="background-color: #EB802676"></span>Alternative Fuel Infrastructure Tax Credit</div>-->
-                <div><span style="background-color: #EE316176"></span>Low-Income Communities Bonus Credit</div>
-                <div><span style="background-color: #3855A384"></span>Energy Communities: MSA/Non-MSA FFE</div>
-                <div><span style="background-color: #00000059"></span>Energy Communities: Coal Closure</div>
+                <div data-layername="cejst_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)" onClick="toggleLayer(this)"><span style="background-color: #F0AB0084" ></span>Justice 40</div>
+                <!--<div><span style="background-color: #EB802676"></span>Alternative Fuel Infrastructure Tax Credit</div> -->
+                <div data-layername="low_income_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)" onClick="toggleLayer(this)"><span style="background-color: #EE316176" ></span>Low-Income Communities Bonus Credit</div>
+                <div data-layername="ffe_ec_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)" onClick="toggleLayer(this)"><span style="background-color: #3855A384" ></span>Energy Communities: MSA/Non-MSA FFE</div>
+                <div data-layername="ccec_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)" onClick="toggleLayer(this)"><span style="background-color: #00000059" ></span>Energy Communities: Coal Closure</div>
             </div>
         </div>
     </div>
@@ -318,7 +337,7 @@
                     'source-layer': 'cejst',
                     "paint": {
                         "fill-color": "#F0AB00", //#81C67B EE3161
-                        "fill-opacity": 0.25 //.33hexa 84
+                        "fill-opacity": 0.3 //.33hexa 84
                     },
                     "layout": { "visibility": "visible" }
                 },
@@ -373,8 +392,8 @@
                     'source': 'ira_tiles',
                     'source-layer': 'ccec',
                     "paint": {
-                        "fill-color": "#000000", //0096A4
-                        "fill-opacity": 0.25
+                        "fill-color": "#222222", //0096A4
+                        "fill-opacity": 0.3
                     },
                     "layout": { "visibility": "visible" }
                 },
@@ -510,7 +529,7 @@
             return `<br><span class="clickable" data-modal="ec" onclick="getModal(this.getAttribute('data-modal'))">Energy Community</span>: ${(ecQual == 1 || adjCoal == "Yes" || genClose == "Yes" || mineClose == "Yes") ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}
                         <br><span class="clickable" data-modal="licb" onclick="getModal(this.getAttribute('data-modal'))">Low Income Communities Bonus Credit Program</span>: ${lowIncome == "true" ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}
                         <br><span class="clickable" data-modal="justice40" onclick="getModal(this.getAttribute('data-modal'))">Justice 40</span>: ${justice40 == 1 ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}
-                        `;
+                        <br><br><br><br>`;
         }
         function zoomGetter() {
             map.once('idle', () => {
@@ -633,6 +652,35 @@
                 infoModal.style.display = "none";
             }
         }
+        function toggleLayer(e){
+            var clickedLayer = e.getAttribute('data-layername');
+            var visibility = map.getPaintProperty(clickedLayer, 'fill-opacity');
+            e.classList.toggle("mute_style");
+            if (visibility === 0.01) {
+            map.setPaintProperty(clickedLayer, 'fill-opacity', 0.3);
+            } else {
+            map.setPaintProperty(clickedLayer, 'fill-opacity', 0.01);
+            }
+        };
+
+        function hovOpaque(e){
+            var clickedLayer = e.getAttribute('data-layername');
+            var visibility = map.getPaintProperty(clickedLayer, 'fill-opacity');
+            if (visibility > 0.2) {
+            map.setPaintProperty(clickedLayer, 'fill-opacity', 0.7);
+            } else {
+            map.setPaintProperty(clickedLayer, 'fill-opacity', 0.01);
+            }
+        };
+        function hovDefault(e){
+            var clickedLayer = e.getAttribute('data-layername');
+            var visibility = map.getPaintProperty(clickedLayer, 'fill-opacity');
+            if (visibility > 0.2) {
+            map.setPaintProperty(clickedLayer, 'fill-opacity', 0.3);
+            } else {
+            map.setPaintProperty(clickedLayer, 'fill-opacity', 0.01);
+            }
+        };
     </script>
 </body>
 
