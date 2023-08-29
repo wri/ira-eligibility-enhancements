@@ -164,7 +164,7 @@
         }
 
         .legend div {
-            padding:0 0.4rem;
+            padding:0 0.2rem;
         }
 
         .legend div:hover, .legend div:active {
@@ -183,7 +183,13 @@
         .mute_style {
             opacity:0.4;
         }
-
+        .prevent_selection {
+            -webkit-touch-callout: none; /* Safari */
+        -webkit-user-select: none; /* Chrome */     
+           -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none; 
+        }
         @media only screen and (max-width: 800px) {
             #content-container {
                 flex-direction: column-reverse;
@@ -202,6 +208,14 @@
                 justify-content: center;
                 align-items: center;
                 columns: 2 auto;
+                column-fill: balance;
+            }
+            .legend div {
+                display: block;
+                break-inside: avoid-column;
+                text-indent: -1rem;
+                padding-left: 1rem;
+
             }
         }
     </style>
@@ -288,7 +302,7 @@
                 </div>
             </div>
             <div id="map"></div>
-            <div id="state-legend" class="legend">
+            <div id="state-legend" class="legend prevent_selection">
                 <div data-layername="cejst_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)" onClick="toggleLayer(this)"><span style="background-color: #F0AB0084" ></span>Justice 40</div>
                 <!--<div><span style="background-color: #EB802676"></span>Alternative Fuel Infrastructure Tax Credit</div> -->
                 <div data-layername="low_income_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)" onClick="toggleLayer(this)"><span style="background-color: #EE316176" ></span>Low-Income Communities Bonus Credit</div>
@@ -565,7 +579,7 @@
             map.dragPan.disable()
             map.keyboard.disable()
             map.doubleClickZoom.disable()
-            map.touchZoomRotate.disable()
+            map.touchZoomRotate.disableRotation();
         }
         function enableInteraction() {
             map.scrollZoom.enable()
