@@ -21,6 +21,11 @@
             padding: 0;
         }
 
+        p {
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+
         #main-container {
             height: 100%;
             width: 100%;
@@ -122,20 +127,6 @@
 
         }
 
-        .close {
-            color: #aaaaaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
         ul ul {
             padding-left: 14px
         }
@@ -164,11 +155,12 @@
         }
 
         .legend div {
-            padding:0 0.2rem;
+            padding: 0 0.2rem;
         }
 
-        .legend div:hover, .legend div:active {
-            color:#222222;
+        .legend div:hover,
+        .legend div:active {
+            color: #222222;
             background-color: #eeeeee;
             cursor: pointer;
         }
@@ -180,16 +172,23 @@
             margin-right: 5px;
             width: 10px;
         }
+
         .mute_style {
-            opacity:0.4;
+            opacity: 0.4;
         }
+
         .prevent_selection {
-            -webkit-touch-callout: none; /* Safari */
-        -webkit-user-select: none; /* Chrome */     
-           -moz-user-select: none; /* Firefox */
-            -ms-user-select: none; /* Internet Explorer/Edge */
-                user-select: none; 
+            -webkit-touch-callout: none;
+            /* Safari */
+            -webkit-user-select: none;
+            /* Chrome */
+            -moz-user-select: none;
+            /* Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
         }
+
         @media only screen and (max-width: 800px) {
             #content-container {
                 flex-direction: column-reverse;
@@ -203,20 +202,128 @@
             #sidebar {
                 width: 100%;
             }
+
             .legend {
                 position: sticky;
                 justify-content: center;
                 align-items: center;
                 columns: 2 auto;
                 column-fill: balance;
+                font: 9px/12px 'Helvetica Neue', Arial, Helvetica, sans-serif;
             }
+
             .legend div {
                 display: block;
                 break-inside: avoid-column;
                 text-indent: -1rem;
                 padding-left: 1rem;
-
             }
+        }
+
+        dialog {
+            border: none !important;
+            border-radius: calc(5px * var(--ratio));
+            box-shadow: 0 0 #0000, 0 0 #0000, 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 1.6rem;
+            max-width: 400px;
+        }
+
+        dialog:modal {
+            max-width: min(800px, 80vw);
+            max-height: 80vh;
+        }
+
+        dialog>form {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            align-items: start;
+            max-block-size: 80vh;
+            max-block-size: 80dvb;
+        }
+
+        dialog>form>header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: #fff;
+
+        }
+
+        dialog>form>header>button {
+            border-radius: 25%;
+            padding: .75ch;
+            aspect-ratio: 1;
+            flex-shrink: 0;
+            place-items: center;
+            stroke: currentColor;
+            stroke-width: 3px;
+        }
+
+        dialog>form>article {
+            overflow-y: auto;
+            max-block-size: 100%;
+            /* safari */
+            overscroll-behavior-y: contain;
+            justify-items: flex-start;
+
+        }
+
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .close {
+            vertical-align: middle;
+            border: none;
+            color: inherit;
+            border-radius: 50%;
+            background: transparent;
+            position: relative;
+            width: 32px;
+            height: 32px;
+            opacity: 0.6;
+        }
+
+        .close:focus,
+        .close:hover {
+            opacity: 1;
+            background: rgba(128, 128, 128, 0.5);
+        }
+
+        .close:active {
+            background: rgba(128, 128, 128, 0.9);
+        }
+
+        /* tines of the X */
+        .close::before,
+        .close::after {
+            content: " ";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 20px;
+            width: 4px;
+            background-color: currentColor;
+        }
+
+        .close::before {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .close::after {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
+        .backClick {
+            text-decoration: underline;
+            cursor: pointer;
+            color: #333;
+            text-shadow: #ddd 1px 0 10px;
+            z-index: 1;
+        }
+
+        ul {
+            margin: 0;
         }
     </style>
 </head>
@@ -231,83 +338,271 @@
         <nav>
             <div class="title">IRA Eligibility Enhancements (beta)</div>
             <div class="nav-links">
-                <span class="clickable nav-link" data-modal="info"
-                    onclick="getModal(this.getAttribute('data-modal'))">More information on the enhancements represented
-                    here</span>
+                <span class="clickable nav-link" data-modal="info" onclick="MoreInfoDialog.showModal()">Overview of
+                    enhancements</span>
             </div>
         </nav>
         <div id="content-container">
             <div id="sidebar">
                 <div class="container">
                 </div>
-                <div id="myModal" class="modal">
-                    <div class="modal-content">
-                        <span class="closeModal">&times;</span>
-                        <div id="modal-target"></div>
-                    </div>
-                </div>
+                <dialog id="AltFuelDialog">
+                    <form method="dialog">
+                        <header>
+                            <h2>Alternative Fuel Infrastructure Tax Credit</h2>
+                            <button autofocus class="close" aria-label="Close"
+                                onclick="this.closest('dialog').close('close')"></button>
+                        </header>
+                        <article>
+                            <p>Consumers installing fueling equipment in qualifying areas are eligible for a tax credit
+                                worth 30% of the cost, up to a value of $100,000. Projects that are subject to an
+                                allowance for depreciation (i.e. for business or investment use) must meet prevailing
+                                wage and apprenticeship requirements to receive the full 30% tax credit, and those that
+                                don’t are eligible for a 6% tax credit. Bi-directional charging equipment is included in
+                                this credit, and while equipment, make ready, and installation costs are considered
+                                covered expenses, permitting and inspection fees are not. </p>
+                            <p>Consumers in qualifying areas installing EV charging equipment or alternative fueling
+                                equipment in their home are eligible for a tax credit equal to the smaller of 30% of the
+                                property’s cost or $1,000. This is not subject to prevailing wage and apprenticeship
+                                requirements.</p>
+                            <p>This credit may be stackable with <a
+                                    href="https://www.chargepoint.com/incentives">incentives from your state or local
+                                    utility provider</a>, and you can check with them to confirm.</p>
+                            <p>For more information see <a href="https://afdc.energy.gov/laws/10513">here</a>.</p>
+                        </article>
+                    </form>
+                </dialog>
+                <dialog id="Justice40Dialog">
+                    <form method="dialog">
+                        <header>
+                            <h2>Justice40</h2>
+                            <button autofocus class="close" aria-label="Close"
+                                onclick="this.closest('dialog').close('close')"></button>
+                        </header>
+                        <article>
+                            <p>Justice40 is not a single pot of money, but rather changes to ensure government is
+                                distributing benefits of climate, clean energy, affordable and sustainable housing,
+                                clean water, and other investments equitably. Locations identified as Justice40
+                                communities are to receive 40% of the benefits of these investments. As of the release
+                                of the <a href="https://ejscorecard.geoplatform.gov/scorecard/">Phase One Environmental
+                                    Justice Scorecard</a>, over $92 billion has been made available to Justice40 covered
+                                programs, which include both new and existing government initiatives. </p>
+                            <p>The programs covered by the initiative include everything from assistance managing
+                                floodplains to funding for electric school buses and include formula funding as well as
+                                competitive grants. To determine what funding opportunities may meet your location’s
+                                needs, the <a href="https://screeningtool.geoplatform.gov/en/">Climate and Economic
+                                    Justice Screening Tool</a> (CEJST) shows you the indicators that qualify your
+                                location as a Justice40 community. The indicators span categories of climate
+                                vulnerability, energy, health, housing, legacy pollution, transportation, water and
+                                wastewater, and workforce development. Importantly, while CEJST identifies communities
+                                as disadvantaged or not, it does not consider <a
+                                    href="https://www.wri.org/technical-perspectives/ceq-climate-and-economic-justice-screening-tool-cumulative-burdens">cumulative
+                                    burden</a> or whether a community meets the threshold of need across multiple
+                                indicators. The White House has indicated agencies may use their own data and metrics to
+                                prioritize specific areas identified by CEJST in their funding decisions</p>
+                            <p>For more information on Justice40 see <a
+                                    href="https://www.whitehouse.gov/environmentaljustice/justice40/">here</a>.</p>
+                        </article>
+                    </form>
+                </dialog>
+                <dialog id="LowIncDialog">
+                    <form method="dialog">
+                        <header>
+                            <h2>Low-Income Communities Bonus Program</h2>
+                            <button autofocus class="close" aria-label="Close"
+                                onclick="this.closest('dialog').close('close')"></button>
+                        </header>
+                        <article>
+                            <p>This location falls within a <a
+                                    href="https://www.irs.gov/newsroom/irs-and-treasury-issue-guidance-for-owners-of-solar-and-wind-powered-energy-facilities-in-low-income-communities-for-increased-energy-credit-under-the-inflation-reduction-act">defined
+                                    low-income local community</a> or federally recognized tribal land. Qualifying solar
+                                and wind projects sited here are eligible for a 10-percentage point bonus credit on the
+                                baseline ITC. Solar and wind projects anywhere in the country that are installed on
+                                affordable housing buildings, or that direct at least half their financial benefits to
+                                low-income households, are eligible for a 20-percentage point bonus credit. Energy
+                                storage technologies installed in connection with these projects are considered part of
+                                the facility.</p>
+                            <p>This bonus is stackable. For instance, under the ITC (48E, baseline 30% with prevailing
+                                wage and apprenticeship requirements), a solar project sited in an energy community
+                                (+10%), constructed using steel, iron, and manufactured components that meet domestic
+                                manufacturing requirements (+10%), on an affordable housing building (+20%) could be
+                                eligible for tax credits covering 70% of project costs.</p>
+                            <p>To receive this tax credit you must apply for it, and the IRS will approve a maximum of
+                                1.8 GW of capacity a year with unused capacity rolling over into the next. Of this, for
+                                2023 700 MW is reserved for projects located in low-income communities, 200 MW for
+                                projects located on Indian Land, 200 MW for Low Income Residential Buildings, and the
+                                remaining 700 MW for Low-Income Economic Benefit Projects. Of the 700 MW reserved for
+                                projects sited in low-income communities, to ensure these funds mostly serve residences
+                                and consumers rather than businesses, the IRS further reserves 490 MW for residential
+                                behind the meter facilities like rooftop solar. Finally, facilities that both promote
+                                community ownership of energy assets and are sited in either places facing persistent
+                                poverty or Justice40 communities facing poor air quality or high energy burdens priority
+                                for allocation in each category. At least 50% of the allocation in each category will be
+                                reserved for projects that accomplish at least one of the two.</p>
+                            <p>For more information see <a
+                                    href="https://www.federalregister.gov/documents/2023/06/01/2023-11718/additional-guidance-on-low-income-communities-bonus-credit-program">here</a>.
+                            </p>
+                        </article>
+                    </form>
+                </dialog>
+                <dialog id="EnergyComDialog">
+                    <form method="dialog">
+                        <header>
+                            <h2>Energy Communities (ITC and PTC)</h2>
+                            <button autofocus class="close" aria-label="Close"
+                                onclick="this.closest('dialog').close('close')"></button>
+                        </header>
+                        <article>
+                            <p>Clean energy projects and facilities sited here are eligible for a bonus of 10% for the
+                                PTC and up to 10 percentage points for the ITC. Qualifying clean energy projects include
+                                solar and wind technologies, municipal solid waste projects, geothermal electricity
+                                technologies, and tidal power. The ITC also covers energy storage technologies,
+                                microgrid controllers, fuel cells, geothermal (heat pump and direct use), combined heat
+                                & power, microturbines, and interconnection costs, while the PTC covers biomass,
+                                landfill gas, hydroelectric, marine and hydrokinetic projects. ITC projects that don’t
+                                meet prevailing wage and apprenticeship requirements only receive a 2-percentage point
+                                increase.</p>
+                            <p>This bonus is stackable. For instance, under the PTC (45Y, baseline 2.75¢/kWh with
+                                prevailing wage and apprenticeship requirements for projects over 1 MW, adjusted for
+                                inflation) a clean energy project sited in an energy community (+10% or .30¢/kWh),
+                                constructed using steel, iron, or manufactured components that meet domestic
+                                manufacturing requirements (+10% or .30¢/kWh) could be eligible for tax credits worth
+                                3.35¢/kWh.</p>
+                            <p>For more information see <a href="https://energycommunities.gov/">here</a>.</p>
+                        </article>
+                    </form>
+                </dialog>
+                <dialog id="MoreInfoDialog">
+                    <form method="dialog">
+                        <header>
+                            <h2></h2>
+                            <button autofocus class="close" aria-label="Close"
+                                onclick="this.closest('dialog').close('close')"></button>
+                        </header>
+                        <article>
+                            <h3>Justice 40</h3>
+                            <p>The Justice 40 initiative was created by <a
+                                    href="https://www.federalregister.gov/documents/2021/02/01/2021-02177/tackling-the-climate-crisis-at-home-and-abroad">EO14008</a>
+                                to deliver 40% of the benefits of climate and clean energy funding to disadvantaged
+                                communities. Eligible communities are identified using the <a
+                                    href="https://screeningtool.geoplatform.gov/en/">Climate and Economic Justice
+                                    Screening tool</a>.
+                                Over 400 federal government programs across 26 agencies — many of them established or
+                                funded through the
+                                IRA — are covered by Justice40, offering funding for clean energy, clean transit,
+                                affordable housing,
+                                addressing legacy pollution, mitigating and adapting to climate change, wastewater
+                                infrastructure, clean
+                                water, workforce training and development, and energy efficiency. The full list of
+                                covered programs will
+                                be updated regularly and can be found <a
+                                    href="https://www.whitehouse.gov/wp-content/uploads/2023/04/Justice40-Covered-Programs-List_v1.4_04-20-2023.pdf">here</a>.
+                            </p>
+                            <h3>Alternative Fuel Infrastructure Tax Credit (§30C)</h3>
+                            <p>The <a href="https://afdc.energy.gov/laws/10513">Alternative Fuel Infrastructure Tax
+                                    Credit</a> focuses on ensuring vehicle charging and fueling access in non-urban or
+                                low-income areas. It offers tax credits that businesses, governments, non-profits,
+                                individuals, and more can use to install EV charging infrastructure or fueling equipment
+                                for natural gas, propane, hydrogen, E85, or diesel fuel blends containing a minimum of
+                                20% biodiesel in their residence or on commercial property. Residential charging or
+                                fueling equipment installed in non-urban or low-income areas is also eligible for a
+                                version of this tax credit.</p>
+                            <h3>ITC and PTC </h3>
+                            <p>
+                                The Investment Tax Credit (§48 and §48E) and Production Tax Credit (§45 and §45Y) of the
+                                IRA seek to promote clean energy development by offering tax credits for the
+                                installation and operation of a host of clean energy technologies. Through the <a
+                                    href="https://www.whitehouse.gov/cleanenergy/directpay/">Direct Pay</a> mechanism,
+                                these credits have also been made accessible to governments, school districts, public
+                                utility districts, and other entities that don’t pay taxes. While the IRA specifies a
+                                baseline value for these credits, projects can access bonus tax credits if they meet
+                                certain criteria. Two IRA bonus incentives offer enhancements for these tax credits
+                                based on where these projects are located:
+                            </p>
+                            <div style="margin-left:3rem">
+                                <h3>- Energy Communities</h3>
+                                <p>
+                                    The IRA seeks to target investments in clean energy projects and facilities to
+                                    places that have historically been at the forefront of fossil fuel energy
+                                    production. These "energy communities” were home to coal mines and plants that are
+                                    no longer in service, or are communities reliant on fossil fuel employment and
+                                    revenue that are currently seeing high unemployment. Clean energy projects and
+                                    facilities sited in these places help diversify and grow their economies, support
+                                    employment, and boost public revenues. Projects and facilities developed on
+                                    brownfield sites are also eligible for this enhancement but are not reflected on
+                                    this map.
+                                </p>
+                                <h3>- Low-Income Communities Bonus Program </h3>
+                                <p>This provision seeks to promote solar and wind development that benefits residents of
+                                    defined low-income communities. Solar and wind facilities under 5MW that are sited
+                                    on tribal lands or in these communities are eligible for this enhancement. Solar and
+                                    wind projects anywhere in the country that serve eligible affordable housing
+                                    residences or direct over half their financial benefits to low-income households are
+                                    also eligible for this credit but are not reflected on this map. This enhancement is
+                                    not automatic -- developers must apply to the IRS to receive it and for 2023 and
+                                    2024 only 1.8GW of capacity will be approved each year. If the IRS does not fully
+                                    allocate all the given capacity in a single year, the unused capacity will carry
+                                    over into future years until the entire allocated capacity for both years is
+                                    exhausted. While guidance is still being finalized, it indicates priority will be
+                                    given to projects that incorporate community ownership of energy assets, and
+                                    projects sited in places facing persistent poverty or Justice 40 communities facing
+                                    poor air quality and high energy burdens.
+                                </p>
+                            </div>
+                        </article>
+                    </form>
+                </dialog>
                 <div id="infoPanel">
                     <P>
                         Use this map to check your eligibility for geographically bound climate funding opportunities,
-                        including
-                        ITC, PTC, and Alternative Fuel Infrastructure tax credits, as well as Justice 40 programs.
+                        including the Investment Tax Credit (ITC), Production Tax Credit (PTC), Alternative Fuel
+                        Infrastructure Tax Credit, and Justice40 programs.
                     </p>
-                    <p>The Inflation Reduction Act offers states, tribes, cities, towns, businesses, households,
-                        non-profits and
-                        more access to funding for projects that deliver energy savings and climate benefits. Many
-                        programs
-                        funded through the IRA offer bonus funding or preferential treatment to projects that benefit
-                        communities that meet specific criteria. This mapping tool reflects currently available data on
-                        the
-                        following types of enhanced eligibility for IRA funds:</p>
+                    <p>The Inflation Reduction Act (IRA) offers states, tribes, cities, towns, businesses, households,
+                        non-profits and more access to funding for projects that deliver energy savings and climate
+                        benefits. Many programs funded through the IRA offer bonus funding or preferential treatment to
+                        projects that benefit communities that meet specific criteria. This mapping tool reflects
+                        currently available data on the following types of enhanced eligibility for IRA funds: </p>
                     <ul>
                         <li><span class="clickable" data-modal="info"
-                                onclick="getModal(this.getAttribute('data-modal'))">Justice 40</span></li>
-                        <!--<li><span class="clickable" data-modal="info"
-                                onclick="getModal(this.getAttribute('data-modal'))">Alternative Fuel Infrastructure Tax
-                                Credit</span>*</li>-->
-                        <li>ITC and PTC enhancements for: </li>
+                                onclick="Justice40Dialog.showModal()">Justice40</span></li>
+                        <li><span class="clickable" data-modal="info" onclick="AltFuelDialog.showModal()">Alternative
+                                Fuel Infrastructure Tax
+                                Credit (§30C)</span></li>
+                        <li>ITC (§48 and §48E) and PTC (§45 and §45Y) enhancements for: </li>
                         <ul>
-                            <li><span class="clickable" data-modal="info"
-                                    onclick="getModal(this.getAttribute('data-modal'))">Energy communities</span>†</li>
-                            <li><span class="clickable" data-modal="info"
-                                    onclick="getModal(this.getAttribute('data-modal'))">Low Income Communities Bonus
-                                    Credit Program</span>‡</li>
+                            <li><span class="clickable" data-modal="info" onclick="EnergyComDialog.showModal()">Energy
+                                    communities</span></li>
+                            <li><span class="clickable" data-modal="info" onclick="LowIncDialog.showModal()">Low Income
+                                    Communities Bonus
+                                    Credit Program</span></li>
                         </ul>
                     </ul>
-                    <!--<p class="note">
-                        * Note that residential charging or fueling equipment installed anywhere in the country
-                        qualifies for a
-                        version of this credit </p>-->
-                    <p class="note">
-                        †Note that brownfields, one of the three types of locations eligible for this bonus, are not
-                        shown on
-                        this map.
-                    </p>
-                    <p class="note">
-                        ‡Note that IRS guidance for this criteria has not yet been finalized. Additionally, qualified
-                        Low-Income
-                        Residential Buildings are not shown on this map, and projects in any location can qualify for
-                        this
-                        enhancement through the Qualified Low-Income Economic Benefit Project stipulation.
+                    <p>For more information on the types of funding available through the IRA, see <a
+                            href="https://rmi.org/breaking-down-the-inflation-reduction-act-program-by-program-incentive-by-incentive">here</a>.
                     </p>
                     <p class="disclaimer">
                         Disclaimer: The mapping tool may not be relied upon by taxpayers to substantiate a tax return
-                        position
-                        or for determining whether certain penalties apply and will not be used by the IRS for
-                        examination
-                        purposes. The mapping tool does not reflect the application of the law to a specific taxpayer's
-                        situation, and the applicable Internal Revenue Code provisions ultimately control.
+                        position or for determining whether certain penalties apply and will not be used by the IRS for
+                        examination purposes. The mapping tool does not reflect the application of the law to a specific
+                        taxpayer's situation, and the applicable Internal Revenue Code provisions ultimately control.
                     </p>
                 </div>
             </div>
             <div id="map"></div>
             <div id="state-legend" class="legend prevent_selection">
-                <div data-layername="cejst_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)" onClick="toggleLayer(this)"><span style="background-color: #F0AB0084" ></span>Justice 40</div>
-                <!--<div><span style="background-color: #EB802676"></span>Alternative Fuel Infrastructure Tax Credit</div> -->
-                <div data-layername="low_income_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)" onClick="toggleLayer(this)"><span style="background-color: #EE316176" ></span>Low-Income Communities Bonus Credit</div>
-                <div data-layername="ffe_ec_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)" onClick="toggleLayer(this)"><span style="background-color: #3855A384" ></span>Energy Communities: MSA/Non-MSA FFE</div>
-                <div data-layername="ccec_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)" onClick="toggleLayer(this)"><span style="background-color: #00000059" ></span>Energy Communities: Coal Closure</div>
+                <div data-layername="cejst_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)"
+                    onClick="toggleLayer(this)"><span style="background-color: #F0AB0084"></span>Justice40</div>
+                <div data-layername="afitc_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)"
+                    onClick="toggleLayer(this)"><span style="background-color: #FF412C84"></span>Alternative Fuel
+                    Infrastructure Tax Credit (30C)</div>
+                <div data-layername="low_income_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)"
+                    onClick="toggleLayer(this)"><span style="background-color: #A029FF84"></span>Low-Income Communities
+                    Bonus Credit</div>
+                <div data-layername="ec_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)"
+                    onClick="toggleLayer(this)"><span style="background-color: #06A6EE84"></span>Energy Communities
+                </div>
+
             </div>
         </div>
     </div>
@@ -334,52 +629,54 @@
         });
         map.addControl(geocoder, 'top-left');
         map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
-        var basemapLayerDataIndex = 'aerialway' // 'bridge-rail'//layerId of basemap stack, where to put new data layers under labels
+        var basemapLayerDataIndex = 'aerialway'
 
         map.on('load', () => {
             map.addSource('ira_tiles', {
                 'type': 'vector',
-                'tiles': ["https://map.tilebucket.xyz/ira_layers/{z}/{x}/{y}.mvt"],
+                'tiles': ["https://map.tilebucket.xyz/ira_layers_t2/{z}/{x}/{y}.mvt"],
                 'maxzoom': 10,
                 'minzoom': 0
             });
             map.addLayer(
                 {
-                    'id': 'cejst_fill',
+                    'id': 'ec_fill',
                     'type': 'fill',
                     'source': 'ira_tiles',
-                    'source-layer': 'cejst',
+                    'source-layer': 'energy_communities',
                     "paint": {
-                        "fill-color": "#F0AB00", //#81C67B EE3161
-                        "fill-opacity": 0.3 //.33hexa 84
+                        "fill-color": "#06A6EE",
+                        "fill-opacity": 0.33
                     },
                     "layout": { "visibility": "visible" }
                 },
                 basemapLayerDataIndex
             );
-            // map.addLayer(
-            //     {
-            //         'id': 'af_qualifiers_fill',
-            //         'type': 'fill',
-            //         'source': 'ira_tiles',
-            //         'source-layer': 'af_qualifiers',
-            //         "paint": {
-            //             "fill-color": "#EB8026", //9B216C //
-            //             "fill-opacity": 0.30 // hexa 59
-            //         },
-            //         "layout": { "visibility": "visible" }
-            //     },
-            //     basemapLayerDataIndex
-            // );
+
             map.addLayer(
                 {
                     'id': 'low_income_fill',
                     'type': 'fill',
                     'source': 'ira_tiles',
-                    'source-layer': 'low_income',
+                    'source-layer': 'low_income_communities',
                     "paint": {
-                        "fill-color": "#EE3161", //0096A4 EE3161
-                        "fill-opacity": 0.30 // hexa 76
+                        "fill-color": "#A029FF",
+                        "fill-opacity": 0.33
+                    },
+                    "layout": { "visibility": "visible" }
+                },
+                basemapLayerDataIndex
+            );
+
+            map.addLayer(
+                {
+                    'id': 'afitc_fill',
+                    'type': 'fill',
+                    'source': 'ira_tiles',
+                    'source-layer': 'alt_fuel_infra',
+                    "paint": {
+                        "fill-color": "#FF412C",
+                        "fill-opacity": 0.33
                     },
                     "layout": { "visibility": "visible" }
                 },
@@ -387,27 +684,13 @@
             );
             map.addLayer(
                 {
-                    'id': 'ffe_ec_fill',
+                    'id': 'cejst_fill',
                     'type': 'fill',
                     'source': 'ira_tiles',
-                    'source-layer': 'ffe_ec',
+                    'source-layer': 'cejst_indicators',
                     "paint": {
-                        "fill-color": "#3855A3", //F0AB00 000000 EB8026
-                        "fill-opacity": 0.3
-                    },
-                    "layout": { "visibility": "visible" }
-                },
-                basemapLayerDataIndex
-            );
-            map.addLayer(
-                {
-                    'id': 'ccec_fill',
-                    'type': 'fill',
-                    'source': 'ira_tiles',
-                    'source-layer': 'ccec',
-                    "paint": {
-                        "fill-color": "#222222", //0096A4
-                        "fill-opacity": 0.3
+                        "fill-color": "#F0AB00",
+                        "fill-opacity": 0.33
                     },
                     "layout": { "visibility": "visible" }
                 },
@@ -418,7 +701,7 @@
                     "id": "cejst_lines",
                     "type": "line",
                     "source": "ira_tiles",
-                    "source-layer": "cejst",
+                    "source-layer": "cejst_indicators",
                     "minzoom": 8,
                     "paint": {
                         "line-color": "black",
@@ -436,31 +719,10 @@
             );
             map.addLayer(
                 {
-                    "id": "ccec_lines",
+                    "id": "afitc_lines",
                     "type": "line",
                     "source": "ira_tiles",
-                    "source-layer": "ccec",
-                    "minzoom": 8,
-                    "paint": {
-                        "line-color": "black",
-                        "line-width": ["interpolate", ["linear"], ["zoom"],
-                            8, 0.5,
-                            10, 1
-                        ],
-                        "line-opacity": ["interpolate", ["linear"], ["zoom"],
-                            8, 0.3,
-                            10, 0.8
-                        ]
-                    }
-                },
-                basemapLayerDataIndex
-            );
-            map.addLayer(
-                {
-                    "id": "af_qualifiers_lines",
-                    "type": "line",
-                    "source": "ira_tiles",
-                    "source-layer": "af_qualifiers",
+                    "source-layer": "alt_fuel_infra",
                     "minzoom": 8,
                     "paint": {
                         "line-color": "black",
@@ -481,7 +743,7 @@
                     "id": "low_income_lines",
                     "type": "line",
                     "source": "ira_tiles",
-                    "source-layer": "low_income",
+                    "source-layer": "low_income_communities",
                     "minzoom": 8,
                     "paint": {
                         "line-color": "black",
@@ -499,10 +761,10 @@
             );
             map.addLayer(
                 {
-                    "id": "ffe_ec_lines",
+                    "id": "ec_lines",
                     "type": "line",
                     "source": "ira_tiles",
-                    "source-layer": "ffe_ec",
+                    "source-layer": "energy_communities",
                     "minzoom": 8,
                     "paint": {
                         "line-color": "black",
@@ -519,6 +781,8 @@
                 basemapLayerDataIndex
             );
         });
+        var initialText = document.getElementById('infoPanel').innerHTML
+
         var marker = new mapboxgl.Marker();
         function add_marker(event) {
             var coordinates = event.lngLat;
@@ -526,30 +790,85 @@
             marker.setLngLat(coordinates).addTo(map);
         }
 
-        function queryToTextBlock() {
-            globalThis.feats = map.queryRenderedFeatures(point, { layers: ['cejst_fill', 'low_income_fill', 'ccec_fill', 'ffe_ec_fill'] });
-            globalThis.newFeats = feats.map(d => ({
-                layer: d.sourceLayer, properties: d.properties
-            }))
-            var msaQual = newFeats.filter(i => i.layer == "ffe_ec")[0]?.properties.msa_qual
-            var ecQual = newFeats.filter(i => i.layer == "ffe_ec")[0]?.properties.ec_ind_qua
-            var ffeQual = newFeats.filter(i => i.layer == "ffe_ec")[0]?.properties.ffe_ind_qu
-            var adjCoal = newFeats.filter(i => i.layer == "ccec")[0]?.properties.adjacent_t
-            var genClose = newFeats.filter(i => i.layer == "ccec")[0]?.properties.generator_
-            var mineClose = newFeats.filter(i => i.layer == "ccec")[0]?.properties.mine_closu
-            var lowIncome = newFeats.filter(i => i.layer == "low_income")[0]?.properties.low_inc_qual
-            var justice40 = newFeats.filter(i => i.layer == "cejst")[0]?.properties.AJDLI_ET
+        const j40_codebook = {
+            SN_C: 'Identified as disadvantaged for Justice 40:',
+            SN_T: 'Identified as disadvantaged due to tribal overlap',
+            DLI: '≥ 90th percentile for diabetes and is low income',
+            ALI: '≥ 90th percentile for asthma and is low income',
+            PLHSE: '≥ 90th percentile for households at or below 100% federal poverty level and has low HS attainment',
+            LMILHSE: '≥ 90th percentile for low median household income as a percent of area median income and has low HS attainment',
+            ULHSE: '≥ 90th percentile for unemployment and has low HS attainment',
+            EPL_ET: '≥ 90th percentile for expected population loss',
+            EAL_ET: '≥ 90th percentile for expected agricultural loss',
+            EBL_ET: '≥ 90th percentile for expected building loss',
+            EB_ET: '≥ 90th percentile for energy burden',
+            PM25_ET: '≥ 90th percentile for pm2.5 exposure',
+            DS_ET: '≥ 90th percentile for diesel particulate matter',
+            TP_ET: '≥ 90th percentile for traffic proximity',
+            LPP_ET: '≥ 90th percentile for lead paint and the median house value is less than 90th percentile',
+            HRS_ET: 'Tract-level redlining score meets or exceeds 3.25',
+            KP_ET: '≥ 90th percentile for share of homes without indoor plumbing or a kitchen',
+            HB_ET: '≥ 90th percentile for housing burden',
+            RMP_ET: '≥ 90th percentile for RMP proximity',
+            NPL_ET: '≥ 90th percentile for NPL (superfund sites) proximity',
+            TSDF_ET: '≥ 90th percentile for proximity to hazardous waste sites',
+            WD_ET: '≥ 90th percentile for wastewater discharge',
+            UST_ET: '≥ 90th percentile for leaky underground storage tanks',
+            HD_ET: '≥ 90th percentile for heart disease',
+            LLE_ET: '≥ 90th percentile for low life expectancy',
+            IA_LMI_ET: 'Low median household income as a percent of territory median income in 2009 exceeds 90th percentile',
+            IA_UN_ET: 'Unemployment (percent) in 2009 exceeds 90th percentile',
+            IA_POV_ET: 'Percentage households below 100% of federal poverty line in 2009 exceeds 90th percentile',
+            FPL200S: 'Is low income (imputed and adjusted)',
+            TD_ET: '≥ 90th percentile for DOT travel barriers',
+            FLD_ET: '≥ 90th percentile for share of properties at risk of flood in 30 years',
+            WFR_ET: '≥ 90th percentile for share of properties at risk of fire in 30 years',
+            ADJ_ET: 'Tract is surrounded by disadvantaged communities',
+            IS_ET: "≥ 90th percentile for share of the tract's land area that is covered by impervious surface or cropland as a percent",
+            AML_ET: 'At least one abandoned mine in this census tract (missing data is treated as False)',
+            FUDS_ET: 'At least one Formerly Used Defense Site (FUDS) in the tract (missing data is treated as False)'
+        }
 
-            return `<br><span class="clickable" data-modal="ec" onclick="getModal(this.getAttribute('data-modal'))">Energy Community</span>: ${(ecQual == 1 || adjCoal == "Yes" || genClose == "Yes" || mineClose == "Yes") ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}
-                        <br><span class="clickable" data-modal="licb" onclick="getModal(this.getAttribute('data-modal'))">Low Income Communities Bonus Credit Program</span>: ${lowIncome == "true" ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}
-                        <br><span class="clickable" data-modal="justice40" onclick="getModal(this.getAttribute('data-modal'))">Justice 40</span>: ${justice40 == 1 ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}
-                        <br><br><br><br>`;
+        function queryToTextBlock() {
+            globalThis.feats = map.queryRenderedFeatures(point, { layers: ['cejst_fill', 'low_income_fill', 'afitc_fill', 'ec_fill'] });
+            globalThis.newFeats = feats.map(d => ({
+                layer: d.sourceLayer, properties: d.properties, id: d.layer.id
+            }))
+            var ecPresence = newFeats.filter(i => i.layer == "energy_communities")[0]?.id
+            var ecQual = newFeats.filter(i => i.layer == "energy_communities")[0]?.properties.ec_ind_qua
+            var afitcQual = newFeats.filter(i => i.layer == "alt_fuel_infra")[0]?.properties.lic
+            var lowIncome = newFeats.filter(i => i.layer == "low_income_communities")[0]?.id
+            var indianLand = newFeats.filter(i => i.layer == "low_income_communities")[0]?.properties.NAME
+            var usdaPPC = newFeats.filter(i => i.layer == "low_income_communities")[0]?.properties.PerPov1519
+            var justice40 = newFeats.filter(i => i.layer == "cejst_indicators")[0]?.properties.SN_C
+            var pm25 = newFeats.filter(i => i.layer == "cejst_indicators")[0]?.properties.PM25_ET
+            var ene_burden = newFeats.filter(i => i.layer == "cejst_indicators")[0]?.properties.EB_ET
+            var j40 = newFeats.filter(i => i.layer == "cejst_indicators")[0]?.properties
+
+            return `<p><span class="clickable" data-modal="ec" onclick="EnergyComDialog.showModal()">Energy Community</span>*: ${(ecQual == 1 || ecPresence == "ec_fill") ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'} </p>
+                    <p><span class="clickable" data-modal="licb" onclick="LowIncDialog.showModal()">Low Income Communities Bonus Credit Program</span>: ${lowIncome == "low_income_fill" ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}
+                        ${(pm25 == 1) || (ene_burden == 1) || (usdaPPC == 1) || (indianLand) ? "<ul>" : ""}
+                        ${indianLand ? '<li class="note">Federal Tribal Lands</li>' : ""}
+                        ${pm25 == 1 ? '<li class="note">Prioritized due to CEJST PM2.5</li>' : ""}
+                        ${ene_burden == 1 ? '<li class="note">Prioritized due to CEJST Energy Burden</li>' : ""}
+                        ${usdaPPC == 1 ? '<li class="note">Prioritized due to USDA PPC</li>' : ""}
+                        ${(pm25 == 1) || (ene_burden == 1) || (usdaPPC == 1) || (indianLand) ? "</ul>" : ""}</p>
+                    <p><span class="clickable" data-modal="afitc" onclick="AltFuelDialog.showModal()">Alternative Fuel Infrastructure Tax Credit</span>†: ${afitcQual == "Yes" ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}</p>
+                    <p><span class="clickable" data-modal="justice40" onclick="Justice40Dialog.showModal()">Justice 40</span>: ${justice40 == 1 ? '<b class="yes">Yes</b><ul class="note">' : '<b class="no">No</b>'}
+                        ${j40 ? `${Object.entries(j40).map(([key, value]) => (value == 1) ? `<li>${j40_codebook[key]}</li>` : ``).join("")}` : ''}
+                        ${justice40 == 1 ? '</ul>' : ''}</p>
+                        <br>
+                        <p class="note">* Note that brownfield sites are also eligible for this bonus but are not reflected in this map. 
+                            </p>
+                        <p class="note">
+                            † Note that IRS guidance for this credit has not yet been finalized. The IRA states non-urban areas also qualify for this credit, but that is not reflected in these results.</p>
+                        `;
         }
         function zoomGetter() {
             map.once('idle', () => {
                 point = map.project(coords);
                 var templateLit = queryToTextBlock()
-                globalThis.basicText = `<b>${titleText}</b><br>${templateLit}`
+                globalThis.basicText = `<span onClick="document.getElementById('infoPanel').innerHTML = initialText" class="backClick">&#8249; return</span><br><br><b style="text-align:center">${titleText}</b><br>${templateLit}`
                 document.getElementById('infoPanel').innerHTML = basicText
             })
         }
@@ -584,11 +903,9 @@
         function enableInteraction() {
             map.scrollZoom.enable()
             map.boxZoom.enable()
-            //map.dragRotate.enable()
             map.dragPan.enable()
             map.keyboard.enable()
             map.doubleClickZoom.enable()
-            //map.touchZoomRotate.enable()
         }
 
         map.on('moveend', function () {
@@ -603,98 +920,41 @@
         map.touchPitch.disable();
         map.doubleClickZoom.disable();
 
-        var infoModal = document.getElementById("myModal");
-        var infoSpan = document.getElementsByClassName("closeModal")[0];
-        function getModal(val) {
-            if (val == 'ec') {
-                document.getElementById('modal-target').innerHTML = `<h3>ITC and PTC:</h3>
-        <p><h2>Energy Communities</h2></p>
-        <p>Clean energy projects and facilities sited here are eligible for a bonus of 10% for the PTC and up to 10 percentage points for the ITC. Qualifying clean energy projects include solar and wind technologies, municipal solid waste projects, geothermal electricity technologies, and tidal power. The ITC also covers energy storage technologies, microgrid controllers, fuel cells, geothermal (heat pump and direct use), combined heat & power, microturbines, and interconnection costs, while the PTC covers biomass, landfill gas, hydroelectric, marine and hydrokinetic projects. ITC projects that don’t meet prevailing wage and apprenticeship requirements only receive a 2-percentage point increase.</p>
-        <p>This bonus is stackable. For instance, under the PTC (45Y, baseline 2.75¢/kWh with prevailing wage and apprenticeship requirements for projects over 1 MW, adjusted for inflation) a clean energy project sited in an energy community (+10% or .30¢/kWh), constructed using steel, iron, or manufactured components that meet domestic manufacturing requirements (+10% or .30¢/kWh) could be eligible for tax credits worth 3.35¢/kWh.</p>
-        <p>For more information see <a href="https://energycommunities.gov/">here</a>.</p>`
-            } else if (val == 'licb') {
-                document.getElementById('modal-target').innerHTML = `<h3>ITC</h3><p><h2>Low-Income Communities Bonus Program</h2></p>
-        <p>Qualifying solar and wind projects sited on tribal land or in low-income communities are eligible for a 10-percentage point bonus credit on the baseline ITC. Solar and wind projects anywhere in the country that are installed on affordable housing buildings, or that direct at least half their financial benefits to low-income households, are eligible for a 20-percentage point bonus credit. Energy storage technologies installed in connection with these projects are considered part of the facility.</p>
-        <p>This bonus is stackable. For instance, under the ITC (48E, baseline 30% with prevailing wage and apprenticeship requirements), a solar project sited in an energy community (+10%), constructed using steel, iron, and manufactured components that meet domestic manufacturing requirements (+10%), on an affordable housing building (+20%) could be eligible for tax credits covering 70% of project costs.</p>
-        <p>To receive this tax credit you must apply for it, and the IRS will approve a maximum of 1.8 GW of capacity a year. Of this, proposed rules reserve 700 MW for projects located in low-income communities, 200 MW for projects located on Indian Land, 200 MW for Low Income Residential Buildings, and the remaining 700 MW for Low-Income Economic Benefit Projects. Of the 700 MW reserved for projects sited in low-income communities, to ensure these funds mostly serve residences and consumers rather than businesses, the IRS further reserves 560 MW for residential behind the meter facilities like rooftop solar. Finally, proposed rules offer facilities that both promote community ownership of energy assets and are sited in either places facing persistent poverty or Justice 40 communities facing poor air quality or high energy burdens priority for allocation in each category. At least 50% of the allocation in each category would be reserved for projects that accomplish at least one of the two.</p>
-        <p>As of July 20, 2023 this guidance has not yet been finalized. For more information see <a href="https://www.federalregister.gov/documents/2023/06/01/2023-11718/additional-guidance-on-low-income-communities-bonus-credit-program">here</a>.</p>`
-            } else if (val == 'justice40') {
-                document.getElementById('modal-target').innerHTML = `<h2>Justice 40</h2>
-        <p>Justice 40 is not a single pot of money, but rather changes to ensure government is distributing benefits of climate, clean energy, affordable and sustainable housing, clean water, and other investments equitably. Locations identified as Justice40 communities are to receive 40% of the benefits of these investments. As of the release of the <a href="https://ejscorecard.geoplatform.gov/scorecard/">Phase One Environmental Justice Scorecard</a>, over $92 billion has been made available to Justice 40 covered programs, which include both new and existing government initiatives.</p>
-        <p>The programs covered by the initiative include everything from assistance managing floodplains to funding for electric school buses, and include formula funding as well as competitive grants. To determine what funding opportunities may meet your location’s needs, the <a href="https://screeningtool.geoplatform.gov/en/">Climate and Economic Justice Screening Tool</a> (CEJST) can show you the indicators that qualify your location as a Justice 40 community. The indicators span categories of climate vulnerability, energy, health, housing, legacy pollution, transportation, water and wastewater, and workforce development. Importantly, while CEJST identifies communities as disadvantaged or not, it does not consider <a href="https://www.wri.org/technical-perspectives/ceq-climate-and-economic-justice-screening-tool-cumulative-burdens">cumulative burden</a> or whether a community meets the threshold of need across multiple indicators. The White House has indicated agencies may use their own data and metrics to prioritize specific areas identified by CEJST in their funding decisions.</p>
-        <p>For more information on Justice 40 see <a href="https://www.whitehouse.gov/environmentaljustice/justice40/">here</a>.</p>`
-            } else if (val == 'afitc') {
-                document.getElementById('modal-target').innerHTML = `<h2>Alternative Fuel Infrastructure Tax Credit</h2>
-        <p>Consumers installing fueling equipment in qualifying areas are eligible for a tax credit worth 30% of the cost, up to a value of $100,000. Projects that are subject to an allowance for depreciation (i.e. for business or investment use) must meet prevailing wage and apprenticeship requirements to receive the full 30% tax credit, and those that don’t are eligible for a 6% tax credit. Bi-directional charging equipment is included in this credit, and while equipment, make ready, and installation costs are considered covered expenses, permitting and inspection fees are not.</p>
-        <p>Consumers anywhere in the country installing EV charging equipment or alternative fueling equipment in their home are eligible for a tax credit equal to the smaller of 30% of the property’s cost or $1,000. This is not subject to prevailing wage and apprenticeship requirements.</p>
-        <p>This credit may be stackable with <a href="https://www.chargepoint.com/incentives">incentives from your state or local utility provider</a>, and you can check with them to confirm.</p>
-        <p>For more information see <a href="https://afdc.energy.gov/laws/10513">here</a>.</p>`
-            } else if (val == 'info') {
-                document.getElementById('modal-target').innerHTML = `<h3>Justice 40</h3>
-                    <p>The Justice 40 initiative was created by <a href="https://www.federalregister.gov/documents/2021/02/01/2021-02177/tackling-the-climate-crisis-at-home-and-abroad">EO14008</a> to deliver 40% of the benefits of climate and clean energy funding to disadvantaged
-                        communities. Eligible communities are identified using the <a
-                            href="https://screeningtool.geoplatform.gov/en/">Climate and Economic Justice Screening tool</a>.
-                        Over 400 federal government programs across 26 agencies — many of them established or funded through the
-                        IRA — are covered by Justice40, offering funding for clean energy, clean transit, affordable housing,
-                        addressing legacy pollution, mitigating and adapting to climate change, wastewater infrastructure, clean
-                        water, workforce training and development, and energy efficiency. The full list of covered programs will
-                        be updated regularly and can be found <a
-                            href="https://www.whitehouse.gov/wp-content/uploads/2023/04/Justice40-Covered-Programs-List_v1.4_04-20-2023.pdf">here</a>.
-                    </p>
-                    <h3>ITC and PTC </h3>
-                    <p>
-                        The Investment Tax Credit (Section 48 and 48E) and Production Tax Credit (Section 45 and 45Y) of the IRA seek to promote clean energy development by offering tax credits for the installation and operation of a host of clean energy technologies. Through the <a
-                            href="https://www.whitehouse.gov/cleanenergy/directpay/">Direct Pay</a> mechanism, these credits have also been made accessible to governments, school districts, public utility districts, and other entities that don’t pay taxes. While the IRA specifies a baseline value for these credits, projects can access bonus tax credits if they meet certain criteria. Two IRA bonus incentives offer enhancements for these tax credits based on where these projects are located:
-                    </p><div style="margin-left:3rem">
-                    <h3>- Energy Communities</h3>
-                    <p>
-                        The IRA seeks to target investments in clean energy projects and facilities to places that have historically been at the forefront of fossil fuel energy production. These "energy communities” were home to coal mines and plants that are no longer in service, or are communities reliant on fossil fuel employment and revenue that are currently seeing high unemployment. Clean energy projects and facilities sited in these places help diversify and grow their economies, support employment, and boost public revenues. Projects and facilities developed on brownfield sites are also eligible for this enhancement but are not reflected on this map.  
-                    </p>
-                    <h3>- Low-Income Communities Bonus Program </h3>
-                    <p>This provision seeks to promote solar and wind development that benefits residents of defined low-income communities. Solar and wind facilities under 5MW that are sited on tribal lands or in these communities are eligible for this enhancement. Solar and wind projects anywhere in the country that serve eligible affordable housing residences or direct over half their financial benefits to low-income households are also eligible for this credit but are not reflected on this map. This enhancement is not automatic -- developers must apply to the IRS to receive it and for 2023 and 2024 only 1.8GW of capacity will be approved each year. If the IRS does not fully allocate all the given capacity in a single year, the unused capacity will carry over into future years until the entire allocated capacity for both years is exhausted. While guidance is still being finalized, it indicates priority will be given to projects that incorporate community ownership of energy assets, and projects sited in places facing persistent poverty or Justice 40 communities facing poor air quality and high energy burdens. 
-                    </p></div>`
-            }
-            infoModal.style.display = "block";
-        }
-
-        infoSpan.onclick = function () {
-            infoModal.style.display = "none";
-        }
-
-        window.onclick = function (event) {
-            if (event.target == infoModal) {
-                infoModal.style.display = "none";
-            }
-        }
-        function toggleLayer(e){
+        function toggleLayer(e) {
             var clickedLayer = e.getAttribute('data-layername');
             var visibility = map.getPaintProperty(clickedLayer, 'fill-opacity');
             e.classList.toggle("mute_style");
             if (visibility === 0.01) {
-            map.setPaintProperty(clickedLayer, 'fill-opacity', 0.3);
+                map.setPaintProperty(clickedLayer, 'fill-opacity', 0.33);
             } else {
-            map.setPaintProperty(clickedLayer, 'fill-opacity', 0.01);
+                map.setPaintProperty(clickedLayer, 'fill-opacity', 0.01);
             }
         };
-
-        function hovOpaque(e){
+        function hovOpaque(e) {
             var clickedLayer = e.getAttribute('data-layername');
             var visibility = map.getPaintProperty(clickedLayer, 'fill-opacity');
             if (visibility > 0.2) {
-            map.setPaintProperty(clickedLayer, 'fill-opacity', 0.7);
+                map.setPaintProperty(clickedLayer, 'fill-opacity', 0.85);
             } else {
-            map.setPaintProperty(clickedLayer, 'fill-opacity', 0.01);
+                map.setPaintProperty(clickedLayer, 'fill-opacity', 0.01);
             }
         };
-        function hovDefault(e){
+        function hovDefault(e) {
             var clickedLayer = e.getAttribute('data-layername');
             var visibility = map.getPaintProperty(clickedLayer, 'fill-opacity');
             if (visibility > 0.2) {
-            map.setPaintProperty(clickedLayer, 'fill-opacity', 0.3);
+                map.setPaintProperty(clickedLayer, 'fill-opacity', 0.33);
             } else {
-            map.setPaintProperty(clickedLayer, 'fill-opacity', 0.01);
+                map.setPaintProperty(clickedLayer, 'fill-opacity', 0.01);
             }
         };
+        const dialog = document.querySelectorAll("dialog").forEach(
+            d => d.addEventListener('click', ({ target: dialog }) => {
+                if (dialog.nodeName === 'DIALOG') {
+                    dialog.close('dismiss')
+                }
+            })
+        );
     </script>
 </body>
 
