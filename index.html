@@ -325,6 +325,7 @@
         ul {
             margin: 0;
         }
+        sup { vertical-align: top; font-size: 0.7em; }
     </style>
 </head>
 
@@ -845,23 +846,24 @@
             var ene_burden = newFeats.filter(i => i.layer == "cejst_indicators")[0]?.properties.EB_ET
             var j40 = newFeats.filter(i => i.layer == "cejst_indicators")[0]?.properties
 
-            return `<p><span class="clickable" data-modal="ec" onclick="EnergyComDialog.showModal()">Energy Community</span>*: ${(ecQual == 1 || ecPresence == "ec_fill") ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'} </p>
-                    <p><span class="clickable" data-modal="licb" onclick="LowIncDialog.showModal()">Low Income Communities Bonus Credit Program</span>: ${lowIncome == "low_income_fill" ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}
+            return `<p><span class="clickable" data-modal="ec" onclick="EnergyComDialog.showModal()">Energy Community</span><sup>*</sup>: ${(ecQual == 1 || ecPresence == "ec_fill") ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'} </p>
+                    <p><span class="clickable" data-modal="licb" onclick="LowIncDialog.showModal()">Low Income Communities Bonus Credit Program</span><sup>†</sup>: ${lowIncome == "low_income_fill" ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}
                         ${(pm25 == 1) || (ene_burden == 1) || (usdaPPC == 1) || (indianLand) ? "<ul>" : ""}
                         ${indianLand ? '<li class="note">Federal Tribal Lands</li>' : ""}
                         ${pm25 == 1 ? '<li class="note">Prioritized due to CEJST PM2.5</li>' : ""}
                         ${ene_burden == 1 ? '<li class="note">Prioritized due to CEJST Energy Burden</li>' : ""}
                         ${usdaPPC == 1 ? '<li class="note">Prioritized due to USDA PPC</li>' : ""}
                         ${(pm25 == 1) || (ene_burden == 1) || (usdaPPC == 1) || (indianLand) ? "</ul>" : ""}</p>
-                    <p><span class="clickable" data-modal="afitc" onclick="AltFuelDialog.showModal()">Alternative Fuel Infrastructure Tax Credit</span>†: ${afitcQual == "Yes" ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}</p>
+                    <p><span class="clickable" data-modal="afitc" onclick="AltFuelDialog.showModal()">Alternative Fuel Infrastructure Tax Credit</span><sup>‡</sup>: ${afitcQual == "Yes" ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}</p>
                     <p><span class="clickable" data-modal="justice40" onclick="Justice40Dialog.showModal()">Justice 40</span>: ${justice40 == 1 ? '<b class="yes">Yes</b><ul class="note">' : '<b class="no">No</b>'}
                         ${j40 ? `${Object.entries(j40).map(([key, value]) => (value == 1) ? `<li>${j40_codebook[key]}</li>` : ``).join("")}` : ''}
                         ${justice40 == 1 ? '</ul>' : ''}</p>
                         <br>
-                        <p class="note">* Note that brownfield sites are also eligible for this bonus but are not reflected in this map. 
+                        <p class="note"><sup>*</sup> Note that brownfield sites are also eligible for this bonus but are not reflected in this map. 
                             </p>
+                        <p class="note"><sup>†</sup> This map only shows areas that qualify for the Low-Income Communities Bonus Credit Program under the Category 1 criteria, and federally recognized tribal lands that qualify under the Category 2 criteria.  Additional areas that meet the definition of “Indian land” set forth in <a href="https://www.law.cornell.edu/uscode/text/25/3501#2">25 U.S. Code § 3501</a> are eligible under Category 2 but not reflected in this map, and projects in Categories 3 and 4 are eligible and can be sited anywhere.</p> 
                         <p class="note">
-                            † Note that IRS guidance for this credit has not yet been finalized. The IRA states non-urban areas also qualify for this credit, but that is not reflected in these results.</p>
+                            <sup>‡</sup> Note that IRS guidance for this credit has not yet been finalized. Non-urban areas also qualify for this credit, but are not reflected in these results.</p>
                         `;
         }
         function zoomGetter() {
