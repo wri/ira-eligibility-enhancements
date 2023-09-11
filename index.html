@@ -791,6 +791,8 @@
             marker.setLngLat(coordinates).addTo(map);
         }
 
+        const threshAppliesTo = ['SN_C','SN_T','DLI','ALI','PLHSE','LMILHSE','ULHSE','EB_ET' ,'PM25_ET','IA_LMI_ET','IA_UN_ET','IA_POV_ET','FPL200S','ADJ_ET']
+
         const j40_codebook = {
             SN_C: 'Identified as disadvantaged for Justice 40:',
             SN_T: 'Identified as disadvantaged due to tribal overlap',
@@ -845,7 +847,13 @@
             var pm25 = newFeats.filter(i => i.layer == "cejst_indicators")[0]?.properties.PM25_ET
             var ene_burden = newFeats.filter(i => i.layer == "cejst_indicators")[0]?.properties.EB_ET
             var j40 = newFeats.filter(i => i.layer == "cejst_indicators")[0]?.properties
-
+            if (!(j40?.SN_T == 1 || j40?.FPL200S == 1)) {
+                j40 = j40 && Object.fromEntries(
+                    Object.entries(j40).filter(
+                        ([key, val])=>threshAppliesTo.includes(key)
+                    )
+                );
+            }
             return `<p><span class="clickable" data-modal="ec" onclick="EnergyComDialog.showModal()">Energy Community</span><sup>*</sup>: ${(ecQual == 1 || ecPresence == "ec_fill") ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'} </p>
                     <p><span class="clickable" data-modal="licb" onclick="LowIncDialog.showModal()">Low Income Communities Bonus Credit Program</span><sup>†</sup>: ${lowIncome == "low_income_fill" ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}
                         ${(pm25 == 1) || (ene_burden == 1) || (usdaPPC == 1) || (indianLand) ? "<ul>" : ""}
