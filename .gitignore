@@ -1,0 +1,16 @@
+temp/
+data/
+*.zip
+.DS_Store
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+.history/
+*.vsix
+
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
