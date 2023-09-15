@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>(Beta) IRA eligibility map</title>
+    <title>IRA Bonus Mapper (Beta)</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
@@ -337,7 +337,7 @@
         type="text/css">
     <div id="main-container">
         <nav>
-            <div class="title">IRA Eligibility Enhancements (beta)</div>
+            <div class="title">IRA Bonus Mapper (Beta)</div>
             <div class="nav-links">
                 <span class="clickable nav-link" data-modal="info" onclick="MoreInfoDialog.showModal()">Overview of
                     enhancements</span>
@@ -499,7 +499,7 @@
                                 be updated regularly and can be found <a
                                     href="https://www.whitehouse.gov/wp-content/uploads/2023/04/Justice40-Covered-Programs-List_v1.4_04-20-2023.pdf">here</a>.
                             </p>
-                            <h3>Alternative Fuel Infrastructure Tax Credit (§30C)</h3>
+                            <!--<h3>Alternative Fuel Infrastructure Tax Credit (§30C)</h3>
                             <p>The <a href="https://afdc.energy.gov/laws/10513">Alternative Fuel Infrastructure Tax
                                     Credit</a> focuses on ensuring vehicle charging and fueling access in non-urban or
                                 low-income areas. It offers tax credits that businesses, governments, non-profits,
@@ -507,7 +507,7 @@
                                 for natural gas, propane, hydrogen, E85, or diesel fuel blends containing a minimum of
                                 20% biodiesel in their residence or on commercial property. Residential charging or
                                 fueling equipment installed in non-urban or low-income areas is also eligible for a
-                                version of this tax credit.</p>
+                                version of this tax credit.</p>-->
                             <h3>ITC and PTC </h3>
                             <p>
                                 The Investment Tax Credit (§48 and §48E) and Production Tax Credit (§45 and §45Y) of the
@@ -556,8 +556,8 @@
                 <div id="infoPanel">
                     <P>
                         Use this map to enter a specific address and check if it is eligible for geographically bound climate funding opportunities,
-                        including the Investment Tax Credit (ITC), Production Tax Credit (PTC), Alternative Fuel
-                        Infrastructure Tax Credit, and Justice40 programs.
+                        including the Investment Tax Credit (ITC), Production Tax Credit (PTC), <!--Alternative Fuel
+                        Infrastructure Tax Credit, -->and Justice40 programs.
                     </p>
                     <p>The Inflation Reduction Act (IRA) offers states, tribes, cities, towns, businesses, households,
                         non-profits and more access to funding for projects that deliver energy savings and climate
@@ -567,9 +567,9 @@
                     <ul>
                         <li><span class="clickable" data-modal="info"
                                 onclick="Justice40Dialog.showModal()">Justice40</span></li>
-                        <li><span class="clickable" data-modal="info" onclick="AltFuelDialog.showModal()">Alternative
+                        <!--<li><span class="clickable" data-modal="info" onclick="AltFuelDialog.showModal()">Alternative
                                 Fuel Infrastructure Tax
-                                Credit (§30C)</span></li>
+                                Credit (§30C)</span></li>-->
                         <li>ITC (§48 and §48E) and PTC (§45 and §45Y) enhancements for: </li>
                         <ul>
                             <li><span class="clickable" data-modal="info" onclick="EnergyComDialog.showModal()">Energy
@@ -594,9 +594,9 @@
             <div id="state-legend" class="legend prevent_selection">
                 <div data-layername="cejst_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)"
                     onClick="toggleLayer(this)"><span style="background-color: #F0AB0084"></span>Justice40</div>
-                <div data-layername="afitc_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)"
+                <!--<div data-layername="afitc_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)"
                     onClick="toggleLayer(this)"><span style="background-color: #FF412C84"></span>Alternative Fuel
-                    Infrastructure Tax Credit (30C)</div>
+                    Infrastructure Tax Credit (30C)</div> -->
                 <div data-layername="low_income_fill" onpointerover="hovOpaque(this)" onpointerleave="hovDefault(this)"
                     onClick="toggleLayer(this)"><span style="background-color: #A029FF84"></span>Low-Income Communities
                     Bonus Credit</div>
@@ -677,7 +677,7 @@
                     'source-layer': 'alt_fuel_infra',
                     "paint": {
                         "fill-color": "#FF412C",
-                        "fill-opacity": 0.33
+                        "fill-opacity": 0.01
                     },
                     "layout": { "visibility": "visible" }
                 },
@@ -862,7 +862,6 @@
                         ${ene_burden == 1 ? '<li class="note">Prioritized due to CEJST Energy Burden</li>' : ""}
                         ${usdaPPC == 1 ? '<li class="note">Prioritized due to USDA PPC</li>' : ""}
                         ${(pm25 == 1) || (ene_burden == 1) || (usdaPPC == 1) || (indianLand) ? "</ul>" : ""}</p>
-                    <p><span class="clickable" data-modal="afitc" onclick="AltFuelDialog.showModal()">Alternative Fuel Infrastructure Tax Credit</span><sup>‡</sup>: ${afitcQual == "Yes" ? '<b class="yes">Yes</b>' : '<b class="no">No</b>'}</p>
                     <p><span class="clickable" data-modal="justice40" onclick="Justice40Dialog.showModal()">Justice 40</span>: ${justice40 == 1 ? '<b class="yes">Yes</b><ul class="note">' : '<b class="no">No</b>'}
                         ${j40 ? `${Object.entries(j40).map(([key, value]) => (value == 1) ? `<li>${j40_codebook[key]}</li>` : ``).join("")}` : ''}
                         ${justice40 == 1 ? '</ul>' : ''}</p>
@@ -871,7 +870,6 @@
                             </p>
                         <p class="note"><sup>†</sup> This map only shows areas that qualify for the Low-Income Communities Bonus Credit Program under the Category 1 criteria, and federally recognized tribal lands that qualify under the Category 2 criteria.  Additional areas that meet the definition of “Indian land” set forth in <a href="https://www.law.cornell.edu/uscode/text/25/3501#2">25 U.S. Code § 3501</a> are eligible under Category 2 but not reflected in this map, and projects in Categories 3 and 4 are eligible and can be sited anywhere.</p> 
                         <p class="note">
-                            <sup>‡</sup> Note that IRS guidance for this credit has not yet been finalized. Non-urban areas also qualify for this credit, but are not reflected in these results.</p>
                         `;
         }
         function zoomGetter() {
