@@ -38,8 +38,8 @@ temp/ccec.geojson: data/IRA_Coal_Closure_Energy_Comm_2023v2/Coal_Closure_Energy_
 
 
 # Low Income Communities
-temp/lic.geojson: temp/lic_unioned.geojson temp/clipped_ppa.geojson
-	mapshaper $^ combine-files -union -filter-fields PerPov1519,NAME -o ndjson $@
+	mapshaper $^ combine-files -union -filter '(lic == "Yes"||(NAME !== null && NAME !== ""))' -filter-fields lic,PerPov1519,NAME -o ndjson $@
+# ^union in prereqs fills interior polygons, need to filter out based on attrs or find a non-union method
 
 temp/clipped_ppa.geojson: temp/usda_ppa.geojson temp/lic_dissolve.geojson
 	mapshaper $< -clip $(word 2,$^) remove-slivers -o ndjson $@

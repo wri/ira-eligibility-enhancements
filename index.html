@@ -5,6 +5,10 @@
     <meta charset="utf-8">
     <title>IRA Bonus Mapper (Beta)</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta property="og:title" content="IRA Bonus Mapper (Beta)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="A simple web tool to check eligibility for geographically bound climate funding opportunities, including the Investment Tax Credit (ITC), Production Tax Credit (PTC), and Justice40 programs" />
+    <meta property="og:url" content="https://wri.github.io/ira-eligibility-enhancements/" />
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
     <style>
@@ -327,6 +331,7 @@
         }
         sup { vertical-align: top; font-size: 0.7em; }
     </style>
+    <script src=https://cdn.usefathom.com/script.js data-site="DHVQGOYL" defer></script>
 </head>
 
 <body>
@@ -635,7 +640,7 @@
         map.on('load', () => {
             map.addSource('ira_tiles', {
                 'type': 'vector',
-                'tiles': ["https://map.tilebucket.xyz/ira_layers_t2/{z}/{x}/{y}.mvt"],
+                'tiles': ["https://map.tilebucket.xyz/ira_layers/{z}/{x}/{y}.mvt"],
                 'maxzoom': 10,
                 'minzoom': 0
             });
@@ -898,6 +903,11 @@
         }
 
         geocoder.on('result', pointGetter)
+
+        geocoder.on('result', function(e) {
+            geocoder.clear();
+            document.getElementsByClassName('mapboxgl-ctrl-geocoder--input')[0].blur();
+        });
 
         function disableInteraction() {
             map.scrollZoom.disable()
